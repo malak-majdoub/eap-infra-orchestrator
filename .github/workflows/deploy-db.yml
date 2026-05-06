@@ -27,7 +27,9 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "./infra/docker/docker-compose.yml"
+          source: |
+            ./infra/docker/docker-compose.yml
+            ./infra/sql/init.sh
           target: "/home/${{ secrets.VPS_USER }}/"
 
       # Move file into /opt using sudo
@@ -40,6 +42,7 @@ jobs:
           script: |
             set -e
             sudo mv /home/${{ secrets.VPS_USER }}/infra/docker/docker-compose.yml /opt/postgres/
+            sudo mv /home/${{ secrets.VPS_USER }}/infra/sql/init.sh /opt/postgres/
             sudo chown -R $USER:$USER /opt/postgres
 
   deploy:
@@ -54,12 +57,17 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          # !! docker compose -p should be envirnment-driven docker compose -p $APP_ENV in real test
           script: |
             set -e
             cd /opt/postgres
+
             export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
             export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
+            export APP_ENV=${{ github.event.inputs.environment }}
+
+      
             docker compose -p ${{ vars.COMPOSE_PROJECT_NAME }} -f docker-compose.yml up -d
             echo "Deployment complete"
