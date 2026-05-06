@@ -35,7 +35,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "./artifact/docker-compose.prod2.yml"
+          source: "./infra/docker/docker-compose.prod2.yml"
           target: "/home/${{ secrets.VPS_USER }}/infra/docker/"
 
 
