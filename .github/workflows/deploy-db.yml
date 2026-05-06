@@ -39,7 +39,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            sudo mv /home/${{ secrets.VPS_USER }}/infra/docker/docker-compose.prod2.yml /opt/postgres/
+            sudo mv /home/${{ secrets.VPS_USER }}/infra/docker/docker-compose.yml /opt/postgres/
             sudo chown -R $USER:$USER /opt/postgres
 
   deploy:
@@ -60,5 +60,6 @@ jobs:
             export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
-            docker compose -p prod-test -f docker-compose.prod2.yml up -d
+            export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
+            docker compose -p ${{ vars.COMPOSE_PROJECT_NAME }} -f docker-compose.yml up -d
             echo "Deployment complete"
