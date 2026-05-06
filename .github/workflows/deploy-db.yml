@@ -2,6 +2,16 @@ name: Deploy PostgreSQL Docker Compose
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 jobs:
 
@@ -34,7 +44,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ github.event.inputs.environment }}
     needs: checkout_and_transfer
 
     steps:
