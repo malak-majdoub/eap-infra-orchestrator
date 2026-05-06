@@ -29,7 +29,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            sudo mv /home/infra/docker/${{ secrets.VPS_USER }}/docker-compose.prod2.yml /opt/postgres/
+            sudo mv /home/${{ secrets.VPS_USER }}/infra/docker/docker-compose.prod2.yml /opt/postgres/
             sudo chown -R $USER:$USER /opt/postgres
 
 
