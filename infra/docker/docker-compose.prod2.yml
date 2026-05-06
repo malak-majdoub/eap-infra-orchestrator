@@ -7,11 +7,11 @@ services:
     container_name: postgres_prod2
     restart: always
     environment:
-      POSTGRES_USER: prod_user
-      POSTGRES_PASSWORD: D0orz+IT#33@2026-P!911
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: eap_it33_prod_db
     ports:
-      - "5436:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - pgdata_prod:/var/lib/postgresql/data
 
