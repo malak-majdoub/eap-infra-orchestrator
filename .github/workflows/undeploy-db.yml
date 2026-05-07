@@ -17,8 +17,6 @@ jobs:
   undeploy:
       runs-on: ubuntu-latest
       environment: ${{ github.event.inputs.environment }}
-      needs: checkout_and_transfer
-
       steps:
         - name: Docker Compose Down
           uses: appleboy/ssh-action@v1
