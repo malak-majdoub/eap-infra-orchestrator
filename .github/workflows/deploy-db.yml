@@ -65,6 +65,7 @@ jobs:
             export POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
             export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
             export APP_ENV=${{ github.event.inputs.environment }}
+            export POSTGRES_DB='${{ secrets.POSTGRES_DB }}'
 
       
             docker compose -p ${{ vars.COMPOSE_PROJECT_NAME }} -f docker-compose.yml up -d
