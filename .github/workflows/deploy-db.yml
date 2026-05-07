@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source:"./infra/docker/docker-compose.yml,./infra/sql/init.sh"
+          source: "./infra/docker/docker-compose.yml,./infra/sql/init.sh"
           target: "/home/${{ secrets.VPS_USER }}/"
 
       # Move file into /opt using sudo
