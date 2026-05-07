@@ -15,16 +15,21 @@ on:
 
 jobs:
   undeploy:
-    - name: Docker Compose Down
-      uses: appleboy/ssh-action@v1
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        script: |
-          export POSTGRES_USER='${{ secrets.POSTGRES_USER }}'
-          export POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
-          export POSTGRES_DB='${{ secrets.POSTGRES_DB }}'
-          export POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'
+      runs-on: ubuntu-latest
+      environment: ${{ github.event.inputs.environment }}
+      needs: checkout_and_transfer
 
-          docker compose -p ${{ vars.CONTAINER_NAME }} -f /opt/postgres/docker-compose.yml down -v
+      steps:
+        - name: Docker Compose Down
+          uses: appleboy/ssh-action@v1
+          with:
+            host: ${{ secrets.VPS_HOST }}
+            username: ${{ secrets.VPS_USER }}
+            key: ${{ secrets.VPS_SSH_KEY }}
+            script: |
+              export POSTGRES_USER='${{ secrets.POSTGRES_USER }}'
+              export POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
+              export POSTGRES_DB='${{ secrets.POSTGRES_DB }}'
+              export POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'
+
+              docker compose -p ${{ vars.CONTAINER_NAME }} -f /opt/postgres/docker-compose.yml down -v
