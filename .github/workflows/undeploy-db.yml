@@ -29,5 +29,6 @@ jobs:
               export POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
               export POSTGRES_DB='${{ secrets.POSTGRES_DB }}'
               export POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'
+              export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
 
               docker compose -p ${{ vars.CONTAINER_NAME }} -f /opt/postgres/docker-compose.yml down -v
