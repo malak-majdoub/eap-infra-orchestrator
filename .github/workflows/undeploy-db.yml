@@ -31,4 +31,4 @@ jobs:
               export POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'
               export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
 
-              docker compose -p ${{ vars.CONTAINER_NAME }} -f /opt/postgres/docker-compose.yml down -v
+              docker compose -p ${{ vars.COMPOSE_PROJECT_NAME }} -f /opt/postgres/docker-compose.yml down -v
