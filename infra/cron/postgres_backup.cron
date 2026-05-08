@@ -1,0 +1,3 @@
+0 2 * * * /opt/postgres/backups/backup.sh prod >> /opt/postgres/backups/logs/prod-backup.log 2>&1
+0 3 * * * /opt/postgres/backups/backup.sh test >> /opt/postgres/backups/logs/test-backup.log 2>&1
+0 4 * * * /opt/postgres/backups/backup.sh dev >> /opt/postgres/backups/logs/dev-backup.log 2>&1
