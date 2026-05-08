@@ -14,7 +14,7 @@ on:
           - prod
 
 jobs:
-  undeploy:
+  stop-container:
       runs-on: ubuntu-latest
       environment: ${{ github.event.inputs.environment }}
       steps:
