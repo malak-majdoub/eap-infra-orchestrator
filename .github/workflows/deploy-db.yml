@@ -55,7 +55,6 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          # !! docker compose -p should be environment-driven docker compose -p $APP_ENV in real test
           script: |
             set -e
             cd /opt/postgres

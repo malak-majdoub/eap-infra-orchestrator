@@ -1,0 +1,35 @@
+name: Stop PostgreSQL Container
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+
+jobs:
+  undeploy:
+      runs-on: ubuntu-latest
+      environment: ${{ github.event.inputs.environment }}
+      steps:
+        - name: Docker Compose Down
+          uses: appleboy/ssh-action@v1
+          with:
+            host: ${{ secrets.VPS_HOST }}
+            username: ${{ secrets.VPS_USER }}
+            key: ${{ secrets.VPS_SSH_KEY }}
+            script: |
+              export POSTGRES_USER='${{ secrets.POSTGRES_USER }}'
+              export POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'
+              export POSTGRES_DB='${{ secrets.POSTGRES_DB }}'
+              export POSTGRES_PORT='${{ secrets.POSTGRES_PORT }}'
+              export CONTAINER_NAME=${{ vars.CONTAINER_NAME }}
+
+              docker compose -p ${{ vars.COMPOSE_PROJECT_NAME }} -f /opt/postgres/docker-compose.yml down
+              echo "container down"
