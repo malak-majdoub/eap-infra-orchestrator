@@ -1,0 +1,2 @@
+
+0 * * * * cd /opt/monitoring && sudo ./uptime-check-report.sh >> /var/log/uptime-check.log 2>&1
