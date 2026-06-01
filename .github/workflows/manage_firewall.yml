@@ -1,0 +1,63 @@
+name: Manage UFW Firewall
+
+on:
+workflow_dispatch:
+inputs:
+action:
+description: "Firewall action"
+required: true
+type: choice
+options:
+- status
+- allow
+- deny
+port:
+description: "Port number (required for allow/deny)"
+required: false
+default: ""
+
+jobs:
+manage_ufw:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Execute UFW command via SSH
+    uses: appleboy/ssh-action@v1.0.3
+    with:
+      host: ${{ secrets.VPS_HOST }}
+      username: ${{ secrets.VPS_USER }}
+      key: ${{ secrets.VPS_SSH_KEY }}
+      script: |
+        ACTION="${{ github.event.inputs.action }}"
+        PORT="${{ github.event.inputs.port }}"
+
+        case "$ACTION" in
+          status)
+            echo "===== UFW STATUS ====="
+            sudo ufw status
+            ;;
+          allow)
+            if [ -z "$PORT" ]; then
+              echo "Port is required for allow action"
+              exit 1
+            fi
+            echo "===== ALLOWING PORT $PORT ====="
+            sudo ufw allow "$PORT"
+            sudo ufw status
+            ;;
+          deny)
+            if [ -z "$PORT" ]; then
+              echo "Port is required for deny action"
+              exit 1
+            fi
+            echo "===== DENYING PORT $PORT ====="
+            sudo ufw deny "$PORT"
+            sudo ufw status
+            ;;
+          *)
+            echo "Invalid action: $ACTION"
+            exit 1
+            ;;
+        esac
+```
