@@ -1,0 +1,66 @@
+name: Manage Container
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Container action"
+        required: true
+        type: choice
+        options:
+          - start
+          - stop
+          - restart
+      container_name:
+        description: "Docker container name"
+        required: true
+        default: eap-frontend-dev
+        type: choice
+        options:  
+          - eap-frontend-dev
+          - eap-frontend-test
+          - eap-frontend-prod
+          - eap-backend-dev
+          - eap-backend-test
+          - eap-backend-prod
+
+
+jobs:
+  manage_container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Docker command via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          ACTION="${{ github.event.inputs.action }}"
+          CONTAINER="${{ github.event.inputs.container_name }}"
+
+          case "$ACTION" in
+          start)
+            echo "===== STARTING CONTAINER ====="
+            docker start "$CONTAINER"
+            ;;
+
+          stop)
+            echo "===== STOPPING CONTAINER ====="
+            docker stop "$CONTAINER"
+            ;;
+
+          restart)
+            echo "===== RESTARTING CONTAINER ====="
+            docker restart "$CONTAINER"
+            ;;
+
+          *)
+            echo "Invalid action: $ACTION"
+            exit 1
+            ;;
+          esac
+
+          echo ""
+          echo "===== CONTAINER STATUS ====="
+          docker ps -a --filter "name=$CONTAINER"
