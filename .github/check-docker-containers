@@ -1,0 +1,34 @@
+name: Check Docker Containers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check_containers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List all Docker containers via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+
+            echo "=============================="
+            echo " RUNNING CONTAINERS"
+            echo "=============================="
+            docker ps
+
+            echo ""
+            echo "=============================="
+            echo " ALL CONTAINERS (INCLUDING STOPPED)"
+            echo "=============================="
+            docker ps -a
+
+            echo ""
+            echo "=============================="
+            echo " CONTAINER SUMMARY"
+            echo "=============================="
+            docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
