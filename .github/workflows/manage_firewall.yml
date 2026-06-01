@@ -20,7 +20,6 @@ jobs:
 manage_ufw:
 runs-on: ubuntu-latest
 
-```
 steps:
   - name: Execute UFW command via SSH
     uses: appleboy/ssh-action@v1.0.3
@@ -60,4 +59,3 @@ steps:
             exit 1
             ;;
         esac
-```
