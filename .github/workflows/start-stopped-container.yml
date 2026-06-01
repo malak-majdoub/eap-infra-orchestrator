@@ -1,4 +1,4 @@
-name: View Docker Logs
+name: Start Stopped Container
 
 on:
   workflow_dispatch:
