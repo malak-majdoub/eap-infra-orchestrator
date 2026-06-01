@@ -1,0 +1,52 @@
+name: Certbot Certificate Management
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Certificate action"
+        required: true
+        type: choice
+        options:
+          - check
+          - renew
+          - dry-run
+
+jobs:
+  certbot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Manage certificates via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            ACTION="${{ github.event.inputs.action }}"
+
+            case "$ACTION" in
+
+              check)
+                echo "===== CERTIFICATE EXPIRATION CHECK ====="
+                sudo certbot certificates
+                ;;
+
+              renew)
+                echo "===== MANUAL CERTIFICATE RENEWAL ====="
+                sudo certbot renew
+                ;;
+
+              dry-run)
+                echo "===== TEST RENEWAL (DRY RUN) ====="
+                sudo certbot renew --dry-run
+                ;;
+
+              *)
+                echo "Invalid action: $ACTION"
+                exit 1
+                ;;
+            esac
