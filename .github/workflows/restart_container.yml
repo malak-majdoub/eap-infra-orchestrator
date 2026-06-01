@@ -1,4 +1,4 @@
-name: Stop Container
+name: Restart  Container
 
 on:
   workflow_dispatch:
@@ -28,8 +28,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
 
-            echo "===== Stop Container ====="
-            docker stop ${{ github.event.inputs.container_name }}
+            echo "===== restart Container ====="
+            docker restart ${{ github.event.inputs.container_name }}
 
             echo "===== CONTAINER STATUS ====="
             docker ps -a | grep ${{ github.event.inputs.container_name }} || true
