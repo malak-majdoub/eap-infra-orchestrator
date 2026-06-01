@@ -3,15 +3,6 @@ name: View Docker Logs
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Target environment"
-        required: true
-        default: prod
-        type: choice
-        options:
-          - dev
-          - test
-          - prod
       container_name:
         description: "Docker container name"
         required: true
