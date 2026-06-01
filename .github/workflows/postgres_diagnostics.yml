@@ -1,0 +1,57 @@
+name: PostgreSQL Diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Diagnostic action"
+        required: true
+        type: choice
+        options:
+          - status
+          - logs
+
+      container_name:
+        description: "PostgreSQL container name"
+        required: true
+        type: choice
+        options:
+          - postgres_dev
+          - postgres_test
+          - postgres_prod
+
+jobs:
+  postgres_diagnostics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run PostgreSQL diagnostics via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            ACTION="${{ github.event.inputs.action }}"
+            CONTAINER="${{ github.event.inputs.container_name }}"
+
+            case "$ACTION" in
+
+              status)
+                echo "===== POSTGRES CONTAINER STATUS ====="
+                docker ps -a --filter "name=$CONTAINER" \
+                  --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+                ;;
+
+              logs)
+                echo "===== LAST 200 LOG LINES ====="
+                docker logs --tail 200 "$CONTAINER"
+                ;;
+
+              *)
+                echo "Invalid action: $ACTION"
+                exit 1
+                ;;
+            esac
