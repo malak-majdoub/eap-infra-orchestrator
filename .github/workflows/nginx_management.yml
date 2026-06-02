@@ -1,0 +1,46 @@
+name: Nginx Management
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+      description: "Management action"
+      required: true
+      type: choice
+      options:
+      - reload
+      - restart
+      - stop
+      - remove
+      - start
+
+jobs:
+  nginx_management:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute management command
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+            script: |
+            case "${{ github.event.inputs.action }}" in
+              reload)
+                docker exec nginx nginx -s reload
+              ;;
+            restart)
+              docker restart nginx
+              ;;
+            stop)
+              docker stop nginx
+              ;;
+            remove)
+              docker rm nginx
+              ;;
+            start)
+              cd /opt/nginx
+              sudo ./start-nginx.sh
+              ;;
+            esac
