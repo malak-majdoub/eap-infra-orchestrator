@@ -8,11 +8,11 @@ on:
       required: true
       type: choice
       options:
-      - reload
-      - restart
-      - stop
-      - remove
-      - start
+        - reload
+        - restart
+        - stop
+        - remove
+        - start
 
 jobs:
   nginx_management:
