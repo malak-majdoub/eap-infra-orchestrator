@@ -1,16 +1,16 @@
 name: Nginx Diagnostics
 
 on:
-workflow_dispatch:
-  inputs:
-    action:
-      description: "Nginx Diagnostic Action"
-      required: true
-      type: choice
-      options:
-        - status
-        - validate configuration
-        - logs
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Nginx Diagnostic Action"
+        required: true
+        type: choice
+        options:
+          - status
+          - validate configuration
+          - logs
 
 jobs:
   nginx_diagnostics:
