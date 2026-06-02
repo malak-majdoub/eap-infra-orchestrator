@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       action:
-      description: "Management action"
-      required: true
-      type: choice
-      options:
-        - reload
-        - restart
-        - stop
-        - remove
-        - start
+        description: "Management action"
+        required: true
+        type: choice
+        options:
+          - reload
+          - restart
+          - stop
+          - remove
+          - start
 
 jobs:
   nginx_management:
