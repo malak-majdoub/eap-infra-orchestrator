@@ -1,0 +1,37 @@
+name: Nginx Diagnostics
+
+on:
+workflow_dispatch:
+  inputs:
+    action:
+      description: "Nginx Diagnostic Action"
+      required: true
+      type: choice
+      options:
+        - status
+        - validate configuration
+        - logs
+
+jobs:
+  nginx_diagnostics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Execute diagnostic command
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            case "${{ github.event.inputs.action }}" in
+            status)
+              docker ps --filter "name=nginx"
+              ;;
+            validate)
+              docker exec nginx nginx -t
+              ;;
+            logs)
+              docker logs --tail 200 nginx
+              ;;
+            esac
